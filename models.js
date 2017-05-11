@@ -12,6 +12,7 @@ class Zahnrad {
         this.alpha_wt = 0; //kann nur in Paarung bestimmt werden
         this.beta_b = arcsin(sin(beta) * cos(alpha_n));
 
+        this.z_v = z/Math.pow(cos(beta),3); 
         this.z_n = z / (square(cos(this.beta_b)) * cos(beta));
 
         this.d = z * m_n / cos(beta);
@@ -19,12 +20,13 @@ class Zahnrad {
         this.d_a = 0; //kann nur in Paarung bestimmt werden
         this.k = 0; //kann nur in Paarung bestimmt werden
         this.d_f = 0; //kann nur in Paarung bestimmt werden
+        this.d_w = 0; //kann nur in Paarung bestimmt werden
+        this.d_n = this.d/(square(cos(beta)));
 
         this.b = psi*this.d; 
 
         this.c_stern = 0.25; //DIN-Normverzahnung
-        this.d_w = 0; //kann nur in Paarung bestimmt werden
-
+        
         this.p_n = this.m_n * Math.PI;
         this.p_t = m_n * Math.PI / cos(beta);
         this.p_et = this.d_b * Math.PI / z;
@@ -32,17 +34,43 @@ class Zahnrad {
         this.p_bt = this.p_t = cos(this.alpha_t);
         this.p_x = m_n * Math.PI / sin(Math.abs(beta));
         this.p_z = Math.abs(z) * m_n * sin(Math.abs(beta));
+
     }
 
 
-    get_kopfkreis() {
+    calc_kopfkreis() {
         this.d_a = this.d + 2 * this.m_n * (1 + this.x + this.k);
-        return this.d_a;
     }
 
-    get_fußkreis() {
+    calc_fußkreis() {
         this.d_f = this.d - 2 * this.m_n * (1 + this.c_stern - this.x);
-        return this.d_f;
+    }
+
+    calc_zahnhoehe(){
+       this.h_a = (this.d_a - this.d)/2;
+
+       let xi = this.s_n / this.d_n; 
+       xi = toDegrees(xi);
+       
+       this.h_a_strich = this.h_a + (1-cos(xi))*0.5 * this.d_n; 
+
+
+    }
+
+    calc_zahndicke(){
+       this.s_n = this.m_n * (0.5 * Math.PI + 2 * this.x * tan(this.alpha_n));
+
+       let xi = this.s_n / this.d_n; 
+       xi = toDegrees(xi);
+
+       this.s_n_strich = this.d_n * sin(xi);
+
+       this.s_t = .5 * this.p_t + 2 * this.x * this.m_n * tan(this.alpha_t);
+
+       this.s_bt = this.d_b * ((Math.PI + 4*this.x*tan(this.alpha_n))/(2*this.z)+involute(this.alpha_t));
+
+       this.s_bn = this.s_bt * cos(this.beta_b);
+
     }
 
 }
@@ -97,7 +125,7 @@ class Zahnradpaarung {
 
         this.zahnrad1.d_w = d_w1;
         this.zahnrad2.d_w = 2 * this.a - d_w1;
-    }
+    }    
 
     calc_alpha_wt(){
         this.alpha_wt = arccos(cos(this.zahnrad1.alpha_t) * this.a_d / this.a);
@@ -113,7 +141,7 @@ class Zahnradpaarung {
         this.k = (this.a - this.a_d) / m_n * this.profil_sum;
         this.zahnrad1.k = this.k;
         this.zahnrad2.k = this.k;   
-        }
+    }
 
     zahnrad_geometrie_berechnen() {
 
@@ -125,16 +153,18 @@ class Zahnradpaarung {
         
         this.choose_profilverschiebung();              
 
-        //Größen berechnen, die von Paarung unabhängig sind
+        //Größen berechnen, die von Paarung abhängig sind
         let zahnraeder = [this.zahnrad1, this.zahnrad2];       
 
         for (let i = 0; i < zahnraeder.length; i++) {
             let zahnrad = zahnraeder[i];
-            zahnrad.get_kopfkreis();
-            zahnrad.get_fußkreis();
+            zahnrad.calc_kopfkreis();
+            zahnrad.calc_fußkreis();
+            zahnrad.calc_zahndicke();
+            zahnrad.calc_zahnhoehe(); 
+           
         }
 
-        //Größen berechnen, die von Paarung abhängig sind
         this.calc_waelzkreise();
         this.ueberdeckung_berechnen();
     }
