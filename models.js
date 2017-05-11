@@ -39,7 +39,6 @@ class Zahnrad {
 
     }
 
-
     calc_kopfkreis() {
         this.d_a = this.d + 2 * this.m_n * (1 + this.x + this.k);
     }
@@ -72,7 +71,10 @@ class Zahnrad {
         this.s_bt = this.d_b * ((Math.PI + 4 * this.x * tan(this.alpha_n)) / (2 * this.z) + involute(this.alpha_t));
 
         this.s_bn = this.s_bt * cos(this.beta_b);
+    }
 
+    calc_zahnweite() {
+        this.w_k = ((this.k_m - 1) * this.p_bt + this.s_bt) * cos(this.beta_b);
     }
 
 }
@@ -164,6 +166,7 @@ class Zahnradpaarung {
             zahnrad.calc_fußkreis();
             zahnrad.calc_zahndicke();
             zahnrad.calc_zahnhoehe();
+            zahnrad.calc_zahnweite();
 
         }
 
