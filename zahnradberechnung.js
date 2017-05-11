@@ -17,11 +17,6 @@ const psi = 0.5;
 let paarung = new Zahnradpaarung(z1, z2, m_n, alpha_n, beta, psi);
 
 //Achsabstand festlegen
-paarung.choose_achsabstand();
-console.log("gewählter Achsabstand: " + paarung.a + "mm");
-
-
-paarung.choose_profilverschiebung();
 paarung.zahnrad_geometrie_berechnen();
 
 console.log(paarung);
