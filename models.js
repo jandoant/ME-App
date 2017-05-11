@@ -15,7 +15,7 @@ class Zahnrad {
         this.z_v = z / Math.pow(cos(beta), 3);
         this.z_n = z / (square(cos(this.beta_b)) * cos(beta));
 
-        this.k_m = z / (9 * Math.pow(cos(beta), 3)) + 0.5;
+        this.k_m = Math.ceil(z / (9 * Math.pow(cos(beta), 3)) + 0.5);
 
         this.d = z * m_n / cos(beta);
         this.d_b = this.d * cos(this.alpha_t);
@@ -74,8 +74,21 @@ class Zahnrad {
     }
 
     calc_zahnweite() {
-        this.w_k = ((this.k_m - 1) * this.p_bt + this.s_bt) * cos(this.beta_b);
+        this.w_k = this.m_n * cos(this.alpha_n) * ((this.k_m - (this.z / (2 * Math.abs(this.z)))) * Math.PI + this.z * involute(this.alpha_t)) + 2 * this.x * this.m_n * sin(this.alpha_n)
     }
+
+    check_zahnweite_bedingung1() {
+        return (this.b > this.w_k * sin(Math.abs(this.beta_b)));
+    }
+
+    check_zahnweite_bedingung2() {
+        let abc = Math.sqrt(square(this.w_k / cos(this.beta_b)) + square(this.d_b));
+        console.log("abc:  " + abc);
+        return (this.d_f + 2 * this.c_stern * this.m_n) < abc && abc < this.d_a;
+    }
+
+
+
 
 }
 
@@ -142,9 +155,13 @@ class Zahnradpaarung {
     }
 
     calc_kopfhoehenaenderungsfaktor() {
-        this.k = (this.a - this.a_d) / m_n * this.profil_sum;
+        this.k = (this.a - this.a_d) / this.m_n - this.profil_sum;
         this.zahnrad1.k = this.k;
         this.zahnrad2.k = this.k;
+
+        console.log(this.a_d);
+
+
     }
 
     zahnrad_geometrie_berechnen() {
@@ -156,6 +173,10 @@ class Zahnradpaarung {
         this.calc_kopfhoehenaenderungsfaktor();
 
         this.choose_profilverschiebung();
+        //TODO: Nutzer wählt Breite des Ritzels aus
+        this.zahnrad1.b = 16;
+        this.zahnrad2.b = 18;
+        this.b_w = 16;
 
         //Größen berechnen, die von Paarung abhängig sind
         let zahnraeder = [this.zahnrad1, this.zahnrad2];
@@ -168,6 +189,15 @@ class Zahnradpaarung {
             zahnrad.calc_zahnhoehe();
             zahnrad.calc_zahnweite();
 
+            console.log("Zahnweitenbedingungen");
+
+            console.log("Bedingung 1:");
+            let message = zahnrad.check_zahnweite_bedingung1() ? "bestanden" : "nicht bestanden! -- Zahnbreite erhöhen";
+            console.log(message);
+
+            console.log("Bedingung 2:");
+            message = zahnrad.check_zahnweite_bedingung2() ? "bestanden" : "nicht bestanden!";
+            console.log(message);
         }
 
         this.calc_waelzkreise();
