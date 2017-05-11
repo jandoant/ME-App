@@ -12,8 +12,10 @@ class Zahnrad {
         this.alpha_wt = 0; //kann nur in Paarung bestimmt werden
         this.beta_b = arcsin(sin(beta) * cos(alpha_n));
 
-        this.z_v = z/Math.pow(cos(beta),3); 
+        this.z_v = z / Math.pow(cos(beta), 3);
         this.z_n = z / (square(cos(this.beta_b)) * cos(beta));
+
+        this.k_m = z / (9 * Math.pow(cos(beta), 3)) + 0.5;
 
         this.d = z * m_n / cos(beta);
         this.d_b = this.d * cos(this.alpha_t);
@@ -21,12 +23,12 @@ class Zahnrad {
         this.k = 0; //kann nur in Paarung bestimmt werden
         this.d_f = 0; //kann nur in Paarung bestimmt werden
         this.d_w = 0; //kann nur in Paarung bestimmt werden
-        this.d_n = this.d/(square(cos(beta)));
+        this.d_n = this.d / (square(cos(beta)));
 
-        this.b = psi*this.d; 
+        this.b = psi * this.d;
 
         this.c_stern = 0.25; //DIN-Normverzahnung
-        
+
         this.p_n = this.m_n * Math.PI;
         this.p_t = m_n * Math.PI / cos(beta);
         this.p_et = this.d_b * Math.PI / z;
@@ -46,30 +48,30 @@ class Zahnrad {
         this.d_f = this.d - 2 * this.m_n * (1 + this.c_stern - this.x);
     }
 
-    calc_zahnhoehe(){
-       this.h_a = (this.d_a - this.d)/2;
+    calc_zahnhoehe() {
+        this.h_a = (this.d_a - this.d) / 2;
 
-       let xi = this.s_n / this.d_n; 
-       xi = toDegrees(xi);
-       
-       this.h_a_strich = this.h_a + (1-cos(xi))*0.5 * this.d_n; 
+        let xi = this.s_n / this.d_n;
+        xi = toDegrees(xi);
+
+        this.h_a_strich = this.h_a + (1 - cos(xi)) * 0.5 * this.d_n;
 
 
     }
 
-    calc_zahndicke(){
-       this.s_n = this.m_n * (0.5 * Math.PI + 2 * this.x * tan(this.alpha_n));
+    calc_zahndicke() {
+        this.s_n = this.m_n * (0.5 * Math.PI + 2 * this.x * tan(this.alpha_n));
 
-       let xi = this.s_n / this.d_n; 
-       xi = toDegrees(xi);
+        let xi = this.s_n / this.d_n;
+        xi = toDegrees(xi);
 
-       this.s_n_strich = this.d_n * sin(xi);
+        this.s_n_strich = this.d_n * sin(xi);
 
-       this.s_t = .5 * this.p_t + 2 * this.x * this.m_n * tan(this.alpha_t);
+        this.s_t = .5 * this.p_t + 2 * this.x * this.m_n * tan(this.alpha_t);
 
-       this.s_bt = this.d_b * ((Math.PI + 4*this.x*tan(this.alpha_n))/(2*this.z)+involute(this.alpha_t));
+        this.s_bt = this.d_b * ((Math.PI + 4 * this.x * tan(this.alpha_n)) / (2 * this.z) + involute(this.alpha_t));
 
-       this.s_bn = this.s_bt * cos(this.beta_b);
+        this.s_bn = this.s_bt * cos(this.beta_b);
 
     }
 
@@ -81,7 +83,7 @@ class Zahnradpaarung {
 
         this.zahnrad1 = new Zahnrad(z1, m_n, alpha_n, beta, psi);
         this.zahnrad2 = new Zahnrad(z2, m_n, alpha_n, beta, psi);
-        
+
         this.b_w = Math.min(this.zahnrad1.b, this.zahnrad2.b);
 
         this.m_n = m_n;
@@ -105,7 +107,7 @@ class Zahnradpaarung {
             " und " + runden(this.a_max, 3) + "mm"
         );
 
-        this.a = parseFloat(input);       
+        this.a = parseFloat(input);
     }
 
 
@@ -125,44 +127,44 @@ class Zahnradpaarung {
 
         this.zahnrad1.d_w = d_w1;
         this.zahnrad2.d_w = 2 * this.a - d_w1;
-    }    
+    }
 
-    calc_alpha_wt(){
+    calc_alpha_wt() {
         this.alpha_wt = arccos(cos(this.zahnrad1.alpha_t) * this.a_d / this.a);
         this.zahnrad1.alpha_wt = this.alpha_wt;
         this.zahnrad2.alpha_wt = this.alpha_wt;
     }
 
-    calc_profil_sum(){
+    calc_profil_sum() {
         this.profil_sum = (involute(this.alpha_wt) - involute(this.zahnrad1.alpha_t)) / (2 * tan(this.alpha_n)) * (this.zahnrad1.z + this.zahnrad2.z);
     }
 
-    calc_kopfhoehenaenderungsfaktor(){
+    calc_kopfhoehenaenderungsfaktor() {
         this.k = (this.a - this.a_d) / m_n * this.profil_sum;
         this.zahnrad1.k = this.k;
-        this.zahnrad2.k = this.k;   
+        this.zahnrad2.k = this.k;
     }
 
     zahnrad_geometrie_berechnen() {
 
-        this.choose_achsabstand();        
+        this.choose_achsabstand();
         //Mit festgelegtem Achsabstand lassen sich alpha_wt und damit die Profilverschiebungssumme der Paarung berechnen
         this.calc_alpha_wt();
         this.calc_profil_sum();
-        this.calc_kopfhoehenaenderungsfaktor();       
-        
-        this.choose_profilverschiebung();              
+        this.calc_kopfhoehenaenderungsfaktor();
+
+        this.choose_profilverschiebung();
 
         //Größen berechnen, die von Paarung abhängig sind
-        let zahnraeder = [this.zahnrad1, this.zahnrad2];       
+        let zahnraeder = [this.zahnrad1, this.zahnrad2];
 
         for (let i = 0; i < zahnraeder.length; i++) {
             let zahnrad = zahnraeder[i];
             zahnrad.calc_kopfkreis();
             zahnrad.calc_fußkreis();
             zahnrad.calc_zahndicke();
-            zahnrad.calc_zahnhoehe(); 
-           
+            zahnrad.calc_zahnhoehe();
+
         }
 
         this.calc_waelzkreise();
@@ -175,18 +177,17 @@ class Zahnradpaarung {
         this.calc_gesamtueberdeckung();
     }
 
-    calc_profilueberdeckung(){
+    calc_profilueberdeckung() {
         //this.eps_alpha = (1/this.p_et) * (Math.sqrt(square(0.5*this.zahnrad1.d_a)-square(0.5*this.zahnrad2.d_a)));
-        this.eps_alpha = (1/this.p_et)*(Math.sqrt(square(0.5*this.zahnrad1.d_a)-square(0.5*this.zahnrad1.d_b))+(this.zahnrad2.z/Math.abs(this.zahnrad2.z))*Math.sqrt(square(0.5*this.zahnrad2.d_a)-square(0.5*this.zahnrad2.d_b))-this.a*sin(this.alpha_wt));  
+        this.eps_alpha = (1 / this.p_et) * (Math.sqrt(square(0.5 * this.zahnrad1.d_a) - square(0.5 * this.zahnrad1.d_b)) + (this.zahnrad2.z / Math.abs(this.zahnrad2.z)) * Math.sqrt(square(0.5 * this.zahnrad2.d_a) - square(0.5 * this.zahnrad2.d_b)) - this.a * sin(this.alpha_wt));
     }
-    calc_sprungueberdeckung(){
+    calc_sprungueberdeckung() {
         this.eps_beta = this.b_w * sin(Math.abs(beta)) / (this.m_n * Math.PI);
     }
 
-    calc_gesamtueberdeckung(){
-        this.eps_gamma = this.eps_alpha + this.eps_beta;     
+    calc_gesamtueberdeckung() {
+        this.eps_gamma = this.eps_alpha + this.eps_beta;
     }
 
 
 }
-
