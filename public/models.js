@@ -215,7 +215,7 @@ class Zahnradpaarung {
         this.eps_alpha = (1 / this.p_et) * (Math.sqrt(square(0.5 * this.zahnrad1.d_a) - square(0.5 * this.zahnrad1.d_b)) + (this.zahnrad2.z / Math.abs(this.zahnrad2.z)) * Math.sqrt(square(0.5 * this.zahnrad2.d_a) - square(0.5 * this.zahnrad2.d_b)) - this.a * sin(this.alpha_wt));
     }
     calc_sprungueberdeckung() {
-        this.eps_beta = this.b_w * sin(Math.abs(beta)) / (this.m_n * Math.PI);
+        this.eps_beta = this.b_w * sin(Math.abs(this.beta)) / (this.m_n * Math.PI);
     }
 
     calc_gesamtueberdeckung() {
