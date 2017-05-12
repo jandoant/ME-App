@@ -10,6 +10,10 @@ var input_i = document.getElementById('js-show-uebersetzung');
 var input_i_soll = document.getElementById('js-input-uebersetzung-soll');
 var btn_geometrie = document.getElementById("js-btn-calc-geometrie");
 
+var input_psi = document.getElementById('js-input-psi');
+var display_breite = document.getElementById('js-show-breite');
+
+
 let label_z1 = document.getElementById('js-label-z1');
 let label_z2 = document.getElementById('js-label-z2');
 
@@ -22,12 +26,14 @@ let btn_counter = 0;
 let m_n = 0;
 let z1 = 0;
 let z2 = 0;
-let i = "n.def";
 let i_soll = 0;
 let beta = 0;
 let alpha_n = 20;
+let b_w = 0;
+let psi = 0;
 
 update_uebersetzung();
+update_breite();
 
 //Wenn Button geklickt wird, dann wird Berechnung gestartet und das Ergebnis angezeigt
 btn_geometrie.addEventListener("click", function(event) {
@@ -44,6 +50,8 @@ btn_geometrie.addEventListener("click", function(event) {
     console.log("i_soll: " + i_soll);
     console.log("alpha: " + alpha_n);
     console.log("beta: " + beta);
+    console.log("psi: " + psi);
+    console.log("b_w: " + b_w);
 
     if (z1 === 0 || z2 === 0) {
         alert("Die Zähnezahlen dürfen nicht Null sein!");
@@ -62,7 +70,6 @@ btn_geometrie.addEventListener("click", function(event) {
     btn_geometrie.className = "col-sm-12 btn btn-success";
 
     btn_counter++;
-    console.log(btn_counter);
 
 
 });
@@ -77,7 +84,8 @@ input_z1.addEventListener('change', function() {
     update_label();
     update_button();
     update_uebersetzung();
-    update_abweichung_i()
+    update_abweichung_i();
+    update_breite();
 });
 
 input_z2.addEventListener('change', function() {
@@ -85,7 +93,8 @@ input_z2.addEventListener('change', function() {
     update_label();
     update_button();
     update_uebersetzung();
-    update_abweichung_i()
+    update_abweichung_i();
+    update_breite();
 });
 
 input_alpha.addEventListener('change', function() {
@@ -104,13 +113,17 @@ input_i_soll.addEventListener('change', function() {
     update_abweichung_i();
 });
 
+input_psi.addEventListener('change', function() {
+    psi = parseFloat(input_psi.value);
+    update_breite();
+});
+
 function update_uebersetzung() {
     i = -z2 / z1;
     if (z1 == 0) {
         i = "n.def";
     }
     input_i.value = i;
-
     return i;
 }
 
@@ -137,4 +150,11 @@ function update_label() {
 function update_abweichung_i() {
     let abweichung = 100 * Math.abs((i_soll - i) / i_soll)
     show_abweichung_i.innerText = "Abweichung : " + abweichung + "%";
+}
+
+function update_breite() {
+    b_w = psi * Math.min(z1, z2) * m_n / cos(beta);
+
+    display_breite.value = b_w;
+
 }
