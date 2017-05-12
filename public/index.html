@@ -38,17 +38,32 @@
                 </div>
                 <div class="form-group row">
                     <div class="form-group">
-                        <label for="js-input-z1" class="col-sm-12 col-form-label">Zähnezahl Zahnrad 1</label>
+                        <label for="js-input-z1" id="js-label-z1" class="col-sm-12 col-form-label">Zähnezahl Zahnrad 1</label>
                         <div class="col-sm-12">
                             <input type="number" class="form-control" id="js-input-z1" value="0">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="js-input-z2" class="col-sm-12 col-form-label">Zähnezahl Zahnrad 2</label>
+                        <label for="js-input-z2" id="js-label-z2" class="col-sm-12 col-form-label">Zähnezahl Zahnrad 2</label>
                         <div class="col-sm-12">
                             <input type="number" class="form-control" id="js-input-z2" value="0">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="js-show-uebersetzung" class="col-sm-12 col-form-label">Übersetzung</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="js-show-uebersetzung" value="0" disabled>
+                            <p id="js-show-abweichung-i"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="js-input-uebersetzung-soll" class="col-sm-12 col-form-label">Übersetzung soll</label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="js-input-uebersetzung-soll" value="0">
+                        </div>
+
+                    </div>
+
                 </div>
                 <button type="button" id="js-btn-calc-geometrie" class="col-sm-12 btn btn-primary">Zahnradgeometrie berechnen</button>
             </form>
