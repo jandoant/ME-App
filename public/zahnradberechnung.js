@@ -60,7 +60,7 @@ btn_geometrie.addEventListener("click", function(event) {
 
 
     //Zahnradpaarung definieren
-    let paarung = new Zahnradpaarung(z1, z2, m_n, alpha_n, beta, psi);
+    let paarung = new Zahnradpaarung(z1, z2, m_n, alpha_n, beta, b_w);
     //Geometrie der Zahnradpaarung berechnen
     paarung.zahnrad_geometrie_berechnen();
     console.log(paarung);
@@ -153,7 +153,7 @@ function update_abweichung_i() {
 }
 
 function update_breite() {
-    b_w = psi * Math.min(z1, z2) * m_n / cos(beta);
+    b_w = Math.ceil(psi * Math.min(z1, z2) * m_n / cos(beta));
 
     display_breite.value = b_w;
 

@@ -1,11 +1,11 @@
 class Zahnrad {
 
-    constructor(z, m_n, alpha_n, beta, psi) {
+    constructor(z, m_n, alpha_n, beta, b) {
         this.z = z;
         this.m_n = m_n;
         this.alpha_n = alpha_n;
         this.beta = beta;
-        this.psi = psi;
+        this.b = b;
         this.x = 0; //kann nur in Paarung bestimmt werden
 
         this.alpha_t = arctan(tan(alpha_n) / cos(beta));
@@ -24,8 +24,6 @@ class Zahnrad {
         this.d_f = 0; //kann nur in Paarung bestimmt werden
         this.d_w = 0; //kann nur in Paarung bestimmt werden
         this.d_n = this.d / (square(cos(beta)));
-
-        this.b = psi * this.d;
 
         this.c_stern = 0.25; //DIN-Normverzahnung
 
@@ -54,8 +52,6 @@ class Zahnrad {
         xi = toDegrees(xi);
 
         this.h_a_strich = this.h_a + (1 - cos(xi)) * 0.5 * this.d_n;
-
-
     }
 
     calc_zahndicke() {
@@ -173,10 +169,6 @@ class Zahnradpaarung {
         this.calc_kopfhoehenaenderungsfaktor();
 
         this.choose_profilverschiebung();
-        //TODO: Nutzer wählt Breite des Ritzels aus
-        this.zahnrad1.b = 16;
-        this.zahnrad2.b = 18;
-        this.b_w = 16;
 
         //Größen berechnen, die von Paarung abhängig sind
         let zahnraeder = [this.zahnrad1, this.zahnrad2];
